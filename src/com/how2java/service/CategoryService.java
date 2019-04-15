@@ -14,6 +14,15 @@ public interface CategoryService {
 	Category get(int id);
 
 	void updateCategory(Category category);
+
+	void addCategory(Category category);
+	
+	/**
+	 * 事务管理
+	 */
+	void addTwo();
+	 
+    void deleteAll();
     
     /*
      * sql分页查询

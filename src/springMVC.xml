@@ -10,8 +10,15 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
- <!-- 开启注解配置 -->
-    <context:annotation-config/>
+ <!-- 开启注解配置 处理中文 -->
+    <!-- <context:annotation-config/> -->
+    <mvc:annotation-driven >
+	   <mvc:message-converters register-defaults="true">
+	      <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	         <property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+	      </bean>
+	   </mvc:message-converters>    
+    </mvc:annotation-driven>
  
  <!-- 1. 扫描Controller,并将其生命周期纳入Spring管理 -->
     <context:component-scan base-package="com.how2java.controller">

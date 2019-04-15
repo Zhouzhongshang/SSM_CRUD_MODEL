@@ -12,7 +12,38 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    
+    
+   <!-- 配置log4j begin -->
+  <context-param>
+    <param-name>webAppRootKey</param-name>
+    <param-value>bjgjqrcode.root</param-value> <!-- .root -->
+  </context-param>  
+  <context-param>  
+    <param-name>log4jConfigLocation</param-name>  
+    <param-value>WEB-INF/log4j.properties</param-value>  <!-- 配置文件存放路径 -->
+  </context-param>  
+  <listener>  
+    <listener-class>  
+        org.springframework.web.util.Log4jConfigListener  
+    </listener-class>  
+  </listener>  
+  <!-- 配置log4j end -->
      
+      <!-- web.xml的文件 -->
+    <filter>  
+        <filter-name>CharacterEncodingFilter</filter-name>  
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>  
+        <init-param>  
+            <param-name>encoding</param-name>  
+            <param-value>utf-8</param-value>  
+        </init-param>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>CharacterEncodingFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping>     
+    
     <!-- spring mvc核心：分发servlet -->
     <servlet>
         <servlet-name>mvc-dispatcher</servlet-name>
@@ -28,5 +59,6 @@
         <servlet-name>mvc-dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+   
      
 </web-app>

@@ -16,9 +16,9 @@ public class Page {
     }
     public void setStart(int start) {
     	//System.out.println("setpage");
-    	if(start<0){
+    	/*if(start<0){
     		start=0;
-    	}
+    	}*/
     	/*if(start>last){
     		start=last;
     	}*/

@@ -47,6 +47,30 @@
         <property name="poolPreparedStatements" value="true" />
         <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
     </bean>
+    
+    <!-- 添加事务管理 -->
+    <!-- 为注解模式 -->
+     <!-- <tx:annotation-driven transaction-manager="transactionManager"/> -->
+     <!-- xml支持AOp -->
+      <tx:advice id="txadvice" transaction-manager="transactionManager"> 
+        <tx:attributes> 
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception" /> 
+            <tx:method name="del*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="edit*" propagation="REQUIRED" rollback-for="Exception" />
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/> 
+            <tx:method name="list*" propagation="REQUIRED" rollback-for="Exception"/> 
+        </tx:attributes> 
+    </tx:advice> 
+        
+    <aop:config> 
+        <aop:pointcut id="serviceMethod" expression="execution(* com.how2java.service.*.*(..))"/> 
+        <aop:advisor pointcut-ref="serviceMethod" advice-ref="txadvice"/> 
+    </aop:config>      
+    
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
    <!--
      JDBC:
      <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 

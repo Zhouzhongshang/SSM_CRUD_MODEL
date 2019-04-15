@@ -1,19 +1,22 @@
 package com.how2java.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.how2java.pojo.Category;
 import com.how2java.service.CategoryService;
 import com.how2java.util.Page;
-//http://how2j.cn/frontmyQuestion
-import sun.awt.dnd.SunDragSourceContextPeer;
 
 // 告诉spring mvc这是一个控制器类
 /**
@@ -45,63 +48,125 @@ import sun.awt.dnd.SunDragSourceContextPeer;
  * 三：这里的page对象之所在前端jsp页面拿到是因为，默认加入了 mav.addObject("page",page)
  * 是的，就是因为提交了start参数。 springmvc框架会自动把start参数注入到Page对象的start属性上。
  * 
+ * 
+ * 四：由于spring的RequestParam注解接收的参数是来自于requestHeader中，即请求头
+ * ，也就是在url中，格式为xxx?username=123&password=456
+ * 
+ * ，而RequestBody注解接收的参数则是来自于requestBody中，即请求体中 。
+ * 因此综上所述，如果为get请求时，后台接收参数的注解应该为RequestParam，
+ * 如果为post请求时，则后台接收参数的注解就是为RequestBody。附上两个例子
+ * 
+ * 另外，还有一种应用场景，接口规范为resultful风格时，举个例子：如果要获取某个id下此条问题答案的查询次数的话 ，则后台就需要动态获取参数
+ * ，其注解为@PathVariable，并且requestMapping中的value应为value="/{id}/queryNum"，
+ * 
+ * 五：html：放在WebContent目录下 才能获取到
+ *     jsp:放在WEVB_INF目录下
+ *     
  * @author Administrator
  *
  */
 @Controller
 @RequestMapping("")
 public class CategoryController {
+
+	public static final Logger log = Logger.getLogger(CategoryController.class);
+
 	@Autowired
 	CategoryService categoryService;
 
 	@RequestMapping("listCategory")
-	public ModelAndView listCategory(Page page) {//作为参数会被自动放进去的呢
+	public ModelAndView listCategory(Page page) {// 作为参数会被自动放进去的呢
 		ModelAndView mav = new ModelAndView("listCategory");
 
-		PageHelper.offsetPage(page.getStart(), page.getCount());// 分页查询 start count
+		PageHelper.offsetPage(page.getStart(), page.getCount());// 分页查询 start
+																// count
 		List<Category> cs = categoryService.list();
 		// int total = categoryService.total(); //总记录数
 		int total = (int) new PageInfo<>(cs).getTotal();
 
 		page.caculateLast(total); // 最后一页开始
-
+		log.info("cs：" + cs);
 		// 放入转发参数
 		mav.addObject("cs", cs);
 		// 放入jsp路径
 		mav.setViewName("listCategory");
 		return mav;
-		
-		//return "listCategory";
-		
+
+		// return "listCategory";
+
 	}
-	
-	//删除方法
+
+	// 删除方法
 	@RequestMapping("deleteCategory")
-	public String delete(int id){
+	public String delete(int id) {
 		categoryService.delete(id);
 		return "redirect:/listCategory";
 	}
-	
-	//编辑方法
+
+	// 编辑方法
 	@RequestMapping("editCategory")
-	public ModelAndView editCategory(Category category){
-		
-	/*	Category c= categoryService.get(category.getId());
-		return "editCategory";
-		*/
-		
+	public ModelAndView editCategory(Category category) {
+
+		/*
+		 * Category c= categoryService.get(category.getId()); return
+		 * "editCategory";
+		 */
+
 		ModelAndView mav = new ModelAndView("editCategory");
-		Category c= categoryService.get(category.getId());
-		System.out.println(c.getId()+":"+c.getName());
+		Category c = categoryService.get(category.getId());
+		System.out.println(c.getId() + ":" + c.getName());
 		mav.addObject("c", c);
 		return mav;
 	}
-	
-	//更新方法
+
+	// 更新方法
 	@RequestMapping("updateCategory")
-	public String updateCategory(Category category){
+	public String updateCategory(Category category) {
 		categoryService.updateCategory(category);
 		return "redirect:/listCategory";
 	}
+
+	// 添加方法
+	@RequestMapping("addCategory")
+	public String addCategory(Category category) {
+		categoryService.addCategory(category);
+		return "redirect:/listCategory";
+	}
+	
+	/**
+	 * Json
+	 * @param category
+	 * @return
+	 */
+	 @ResponseBody
+	    @RequestMapping("/submitCategory")
+	    public String submitCategory(@RequestBody Category category) { //post提交
+	        System.out.println("SSM接受到浏览器提交的json，并转换为Category对象:"+category);
+	        return "ok";
+	    }
+	     
+	    @ResponseBody
+	    @RequestMapping("/getOneCategory")
+	    public String getOneCategory() {
+	         Category c = new Category();
+	         c.setId(100);
+	         c.setName("第100个分类");
+	         JSONObject json= new JSONObject();
+	         json.put("category", JSONObject.toJSON(c));
+	         return json.toJSONString();
+	    }
+	    @ResponseBody
+	    @RequestMapping("/getManyCategory")
+	    public String getManyCategory() {
+	        List<Category> cs = new ArrayList<>();
+	        for (int i = 0; i < 10; i++) {
+	            Category c = new Category();
+	            c.setId(i);
+	            c.setName("分类名称:"+i);
+	            cs.add(c);
+	        }
+	 
+	        return JSONObject.toJSON(cs).toString();
+	    }
 
 }
