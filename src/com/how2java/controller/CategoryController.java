@@ -138,11 +138,18 @@ public class CategoryController {
 	 * @param category
 	 * @return
 	 */
-	 @ResponseBody
+	    @ResponseBody
 	    @RequestMapping("/submitCategory")
 	    public String submitCategory(@RequestBody Category category) { //post提交
 	        System.out.println("SSM接受到浏览器提交的json，并转换为Category对象:"+category);
-	        return "ok";
+	        Category category2 = new Category();
+	        category2.setId(101);
+	        category2.setName("成功");
+	        Object json = JSONObject.toJSON(category2);
+	        return json.toString();
+	        /**
+	         * JSONObject:key value 形式的
+	         */
 	    }
 	     
 	    @ResponseBody
@@ -151,10 +158,22 @@ public class CategoryController {
 	         Category c = new Category();
 	         c.setId(100);
 	         c.setName("第100个分类");
-	         JSONObject json= new JSONObject();
-	         json.put("category", JSONObject.toJSON(c));
-	         return json.toJSONString();
-	    }
+	         Object json = JSONObject.toJSON(c);
+	      /*   JSONObject json= new JSONObject();
+	         json.put("category", JSONObject.toJSON(c));//这里传递的是json对象   key  value的形式 category : {"name":"第100个分类"，"id":100}
+	        
+	         *  json:{"category":{"name":"第100个分类","id":100}}
+	         *  json.toJSONString():{"category":{"name":"第100个分类","id":100}}
+	         *  json的传输相当于对字符串的传输。
+	         
+	         System.out.println("json:"+json+"\n"+"json.toJSONString():"+json.toJSONString());*/
+	        /* return json.toJSONString();//返回json串  客户端要的是串
+	         * return 
+	         * 
+	         * Syso
+*/	         System.out.println(json); 
+	         return json.toString();
+	         }
 	    @ResponseBody
 	    @RequestMapping("/getManyCategory")
 	    public String getManyCategory() {
@@ -165,8 +184,30 @@ public class CategoryController {
 	            c.setName("分类名称:"+i);
 	            cs.add(c);
 	        }
-	 
-	        return JSONObject.toJSON(cs).toString();
+	 System.out.println("cs:"+cs+"\n"+"JSONObject.toJSON(cs)"+JSONObject.toJSON(cs)+"\n"+"JSONObject.toJSON(cs).toString()"+JSONObject.toJSON(cs).toString());
+	        return JSONObject.toJSON(cs).toString();//先转json 再转字符串
 	    }
 
+	    public static void main(String[] args) {
+			ArrayList<Integer> cs=new ArrayList<>();
+		   for (int i = 0; i < 10; i++) {
+			cs.add(i);
+		}
+		   System.out.println("cs"+cs);
+		}
+	    /**
+	     *  ArrayList<Integer>: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]      集合
+	     *  List<Category> :  [Category [id=0, name=分类名称:0], Category [id=1, name=分类名称:1], Category [id=2, 
+name=分类名称:2], Category [id=3, name=分类名称:3], Category [id=4, name=分类名称:4], Catego
+ry [id=5, name=分类名称:5], Category [id=6, name=分类名称:6], Category [id=7, name=分类名称:
+7], Category [id=8, name=分类名称:8], Category [id=9, name=分类名称:9]]    集合
+         JSONObject.toJSON(cs) :[{"name":"分类名称:0","id":0},{"name":"分类名称:1","id":1},{"name":
+"分类名称:2","id":2},{"name":"分类名称:3","id":3},{"name":"分类名称:4","id":4},{"name":"分类名称
+:5","id":5},{"name":"分类名称:6","id":6},{"name":"分类名称:7","id":7},{"name":"分类名称:8","
+id":8},{"name":"分类名称:9","id":9}]         JSON格式的对象
+         JSONObject.toJSON(cs).toString()：[{"name":"分类名称:0","id":0},{"name":"分类名称:1","id":1},{"name":
+"分类名称:2","id":2},{"name":"分类名称:3","id":3},{"name":"分类名称:4","id":4},{"name":"分类名称
+:5","id":5},{"name":"分类名称:6","id":6},{"name":"分类名称:7","id":7},{"name":"分类名称:8","
+id":8},{"name":"分类名称:9","id":9}]         JSON格式的串 返回
+	     */
 }

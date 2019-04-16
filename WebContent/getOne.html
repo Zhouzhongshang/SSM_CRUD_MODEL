@@ -15,10 +15,12 @@
         var url="getOneCategory";  
         $.post(
                 url, 
-                function(data) {
-                     var json=JSON.parse(data);  
-                     var name =json.category.name;  
-                     var id = json.category.id;
+                function(data) {//data：json串
+                	//这里拿到的数据串
+                     var json=JSON.parse(data);  //解析成对象
+                     alert(json.name)
+                     var name =json.name;  
+                     var id = json.id;
                      $("#messageDiv").html("分类id："+ id + "<br>分类名称:" +name );
                       
          });   

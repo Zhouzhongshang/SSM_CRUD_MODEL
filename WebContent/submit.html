@@ -5,6 +5,10 @@
 <title>用AJAX以JSON方式提交数据</title>  
 <script type="text/javascript" src="jquery.min.js"></script>  
 </head>  
+<!-- 普通的post提交指定action
+     ajax提交指定数据 url
+     vue提交
+ -->
 <body>  
     <form >  
        id：<input type="text" id="id" value="123" /><br/>  
@@ -17,17 +21,23 @@
     $('#sender').click(function(){  
         var id=document.getElementById('id').value;  
         var name=document.getElementById('name').value;  
-        var category={"name":name,"id":id};  
-        var jsonData = JSON.stringify(category);
+        var category={"name":name,"id":id};  //json格式的json对象key value；   {name:“name”,id:“id”};js对象 属性  ：值
+        var jsonData = JSON.stringify(category);  //json格式的字符串  json串常说的json数据
         var page="submitCategory";  
         
         $.ajax({
         		type:"post",
         	   url: page,
-        	   data:jsonData,
+        	   data:jsonData, //在浏览器中的都是一些json串
                dataType:"json",
                contentType : "application/json;charset=UTF-8",
-        	   success: function(result){
+        	   success: function(result){//这里拿到的数据是json对象
+        		 /*  var jsondata= JSON.parse(data);    
+                  alert(jsondata); */
+        		  /*  alert("132")
+        		   console.log(result);
+        		   alert(result); */
+        		   alert(result.name);
         	   }
         	});
 		   alert("提交成功，请在Tomcat控制台查看服务端接收到的数据");
