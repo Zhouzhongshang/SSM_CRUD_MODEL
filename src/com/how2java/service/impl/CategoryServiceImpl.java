@@ -68,6 +68,13 @@ public class CategoryServiceImpl  implements CategoryService{
 			categoryMapper.delete(category.getId());
 		}
 	}
+	
+	public static void main(String[] args) {
+		String a="";
+		if("".equals(a)){
+			System.out.println("keyi");
+		}
+	}
 
 	/*@Override
 	public int total() {
