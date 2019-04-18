@@ -21,9 +21,9 @@ public class CategoryServiceImpl  implements CategoryService{
     }
 
 	@Override
-	public void delete(int id) {
+	public void delete(Category category) {
 		// TODO Auto-generated method stub
-		categoryMapper.delete(id);
+		categoryMapper.delete(category);
 	}
 
 	@Override
@@ -55,9 +55,9 @@ public class CategoryServiceImpl  implements CategoryService{
         c1.setName("短的名字");
         categoryMapper.add(c1);
          
-        Category c2 = new Category();
+       /* Category c2 = new Category();
         c2.setName("名字长对应字段放不下,名字长对应字段放不下,名字长对应字段放不下,名字长对应字段放不下,名字长对应字段放不下,名字长对应字段放不下,名字长对应字段放不下,名字长对应字段放不下,");
-        categoryMapper.add(c2);
+        categoryMapper.add(c2);*/
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class CategoryServiceImpl  implements CategoryService{
 		// TODO Auto-generated method stub
 		List<Category> cs = categoryMapper.list();
 		for (Category category : cs) {
-			categoryMapper.delete(category.getId());
+			categoryMapper.delete(category);
 		}
 	}
 	
@@ -76,16 +76,13 @@ public class CategoryServiceImpl  implements CategoryService{
 		}
 	}
 
-	/*@Override
-	public int total() {
+	@Override
+	public List<Category> chaxun(String name) {
 		// TODO Auto-generated method stub
-		return categoryMapper.total();
+		List<Category> ca=categoryMapper.chaxun(name);
+		return ca;
 	}
 
-	@Override
-	public List<Category> list(Page page) {
-		// TODO Auto-generated method stub
-		return categoryMapper.list(page);
-	}*/
+	
  
 }

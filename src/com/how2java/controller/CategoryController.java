@@ -3,11 +3,13 @@ package com.how2java.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.connector.Request;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -73,8 +75,21 @@ public class CategoryController {
 
 	@Autowired
 	CategoryService categoryService;
-
-	@RequestMapping("listCategory")
+/**
+ * 基于restFUl的增删该查：
+ *  增加    categories：            POST     
+ *  删除    categories/{id}: Delete
+ *  改动    categories/{id}:  PUT
+ *  查询    categories:  GET
+ *  获取    categories/{name}:  GET
+ * @param page
+ * @return
+ * 
+ * 重定向是跳转的
+ * 直接写字符串是直接找页面的
+ * 方法没定义http 没有post 多半是url有问题， 格式有问题
+ */
+	@RequestMapping(value="/categories",method=RequestMethod.GET)
 	public ModelAndView listCategory(Page page) {// 作为参数会被自动放进去的呢
 		ModelAndView mav = new ModelAndView("listCategory");
 
@@ -97,14 +112,14 @@ public class CategoryController {
 	}
 
 	// 删除方法
-	@RequestMapping("deleteCategory")
-	public String delete(int id) {
-		categoryService.delete(id);
-		return "redirect:/listCategory";
+	@RequestMapping(value="/categories/{id}",method=RequestMethod.DELETE)
+	public String delete(Category category) {
+		categoryService.delete(category);
+		return "redirect:/categories";
 	}
 
 	// 编辑方法
-	@RequestMapping("editCategory")
+	@RequestMapping(value="/categories/{id}",method=RequestMethod.GET)
 	public ModelAndView editCategory(Category category) {
 
 		/*
@@ -120,18 +135,38 @@ public class CategoryController {
 	}
 
 	// 更新方法
-	@RequestMapping("updateCategory")
+	@RequestMapping(value="/categories/{id}",method=RequestMethod.PUT)
 	public String updateCategory(Category category) {
 		categoryService.updateCategory(category);
-		return "redirect:/listCategory";
+		return "redirect:/categories";
 	}
 
 	// 添加方法
-	@RequestMapping("addCategory")
+	@RequestMapping(value="/categories",method=RequestMethod.POST)
 	public String addCategory(Category category) {
 		categoryService.addCategory(category);
-		return "redirect:/listCategory";
+		return "redirect:/categories";
 	}
+	
+	/*//模糊查询的分页
+	@RequestMapping(value="/categories/{name}",method=RequestMethod.GET)
+	public ModelAndView chaxun(Category category,Page page){
+		ModelAndView mav = new ModelAndView("listCategory");
+		
+		PageHelper.offsetPage(page.getStart(), page.getCount());// 分页查询 start
+		log.info("name:"+category.getName());
+		List<Category> cs = categoryService.chaxun(category.getName());//模糊查询的结果
+		int total = (int) new PageInfo<>(cs).getTotal();
+		
+		page.caculateLast(total); // 最后一页开始
+		log.info("cs：" + cs);
+		// 放入转发参数
+		mav.addObject("cs", cs);
+		// 放入jsp路径
+		mav.setViewName("listCategory");
+		return mav;
+		//return "redirect:/categories";
+	}*/
 	
 	/**
 	 * Json

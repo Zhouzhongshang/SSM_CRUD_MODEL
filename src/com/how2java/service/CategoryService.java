@@ -9,13 +9,15 @@ public interface CategoryService {
  
     List<Category> list();
 
-	void delete(int id);
+	void delete(Category category);
 
 	Category get(int id);
 
 	void updateCategory(Category category);
 
 	void addCategory(Category category);
+	
+	public List<Category> chaxun(String name);
 	
 	/**
 	 * 事务管理

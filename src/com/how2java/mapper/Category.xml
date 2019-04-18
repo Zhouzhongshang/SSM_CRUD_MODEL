@@ -15,6 +15,10 @@
         <select id="get" parameterType="_int" resultType="Category">
             select * from   category_  where id= #{id}   
         </select>
+        
+        <select id="chaxun" resultType="Category">
+            SELECT * FROM category_ where name like '%' #{name} '%';
+        </select>
  
         <update id="update" parameterType="Category" >
             update category_ set name=#{name} where id=#{id}   

@@ -8,11 +8,17 @@
 	
 	<div style="text-align:center;margin-top:40px">
 		<!-- 编辑方法跳转到这个页面来 修改然后post提交 -->
-		<form method="post" action="updateCategory">
+		<%-- <form method="post" action="updateCategory">
 			分类名称： <input name="name" value="${c.name}" type="text"> <br>
 			<input value="${c.id}" name="id"><br>
 			<input type="submit" value="提交"><br>
-		</form>
+		</form> --%>
+		
+		 <form method="post" action="../categories/${c.id}"><!-- url的定义目录 -->
+            <input type="hidden" name="_method" value="PUT">
+            分类名称： <input name="name" value="${c.name}" type="text"> <br><br>
+            <input type="submit" value="修改分类">
+        </form>
 
 	</div>	
  </div>

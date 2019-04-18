@@ -17,7 +17,7 @@ public class MybatisTest {
  
     @Test
     public void testAddTwo() {
-        categoryService.deleteAll();
+       // categoryService.deleteAll();
         categoryService.addTwo();
          
     }
